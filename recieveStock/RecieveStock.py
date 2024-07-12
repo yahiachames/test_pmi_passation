@@ -85,7 +85,7 @@ class StockReceiptProcessor:
             df["GP_DATEPIECE"] = df["GP_DATEPIECE"].str[-2:] + '/' + df["GP_DATEPIECE"].str[5:7] + '/' + df["GP_DATEPIECE"].str[:4]
             df["GP_DATELIVRAISON"] = df["GP_DATELIVRAISON"].str[-2:] + '/' + df["GP_DATELIVRAISON"].str[5:7] + '/' + df["GP_DATELIVRAISON"].str[:4]
             self.df = df
-            logging.info(self.df)
+            logging(self.df)
             return df
 
         except KeyError as e:
@@ -124,6 +124,7 @@ class StockReceiptProcessor:
             email_client = EmailClient.from_connection_string("endpoint=https://adfariontestemail.unitedstates.communication.azure.com/;accesskey=XuR3TYpb0NLF3Hh0JHgrryf9cqerQASZZcp7xIYallulvyUmbIgPJQQJ99AFACULyCpUVXMwAAAAAZCS9Jrq")
             df_bytes = df.to_csv(index=False).encode() if df is not None else b''
             file_bytes_b64 = base64.b64encode(df_bytes).decode()
+            # logging(file_bytes_b64)
             message = {
                 "content": {
                     "subject": subject,

@@ -34,7 +34,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 mimetype="application/json"
             )
         else:
-            # processor.send_email(f"Stock Receipt Error {ref} – Failed to create file on Middleware", processor.df)
+            processor.send_email(f"Stock Receipt Error {ref} – Failed to create file on Middleware", processor.df)
             return func.HttpResponse(
                 json.dumps({"status": False, "error": {"code": 500, "message": "Failed to create blob."}}),
                 status_code=500,
