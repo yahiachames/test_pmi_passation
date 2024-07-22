@@ -48,7 +48,6 @@ class PDFgenrator:
         """
         # Convert HTML to PDF using WeasyPrint
         pdf_bytes = HTML(string=self.rendered_html).write_pdf()
-        with open(self.output_path, 'wb') as f:
-            f.write(pdf_bytes)
+
         print(f"Conversion complete. PDF saved as '{self.output_file}'")
         return pdf_bytes
