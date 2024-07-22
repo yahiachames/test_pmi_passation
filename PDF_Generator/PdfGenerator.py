@@ -39,7 +39,7 @@ class PDFgenrator:
         self.template = self.env.get_template(self.html_template_file)
         self.rendered_html = self.template.render(self.data)
 
-    def generate_pdf(self) -> bytes:
+    def generate_pdf(self,path_font) -> bytes:
         """
         Converts the rendered HTML to PDF and saves it.
 
@@ -47,7 +47,7 @@ class PDFgenrator:
             bytes: The generated PDF content.
         """
         # Convert HTML to PDF using WeasyPrint
-        pdf_bytes = HTML(string=self.rendered_html).write_pdf()
+        pdf_bytes = HTML(string=self.rendered_html,base_url=path_font).write_pdf()
 
         print(f"Conversion complete. PDF saved as '{self.output_file}'")
         return pdf_bytes

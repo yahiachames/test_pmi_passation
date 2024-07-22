@@ -164,7 +164,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     )
 
     # Generate the PDF
-    pdf = pdf_config.generate_pdf()
+    pdf = pdf_config.generate_pdf(font_path)
     
     # return func.HttpResponse(
     #     json.dumps({"status": True, "payload": request_test}),
