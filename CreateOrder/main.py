@@ -70,7 +70,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return modified_barcode_buffer, modified_barcode_path
     # Usage
     barcode_code = '123456789102'
-    barcode_path = barcode_path = os.path.join(BASE_DIR_FUNCTION, 'tmp', barcode_code)  # Provide the path where you want to save the barcode image
+    barcode_path = barcode_path = os.path.join( '/tmp', barcode_code)  # Provide the path where you want to save the barcode image
 
     # Generate and modify the barcode
     modified_barcode_buffer, modified_barcode_path = generate_and_modify_barcode(barcode_code, barcode_path)
