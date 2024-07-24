@@ -34,7 +34,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         logging.info("iq payload")
         logging.info(data)
-        
+
         #fileLink
         current_date = datetime.now().strftime("%d-%m-%Y")
         fileLink = os.environ.get("fileLink") + data["orderType"] + "/" + current_date + "/" + data["orderNumber"] + ".pdf"
@@ -458,11 +458,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 "data": formatted_lines,
                 "image_path": f"file://{os.path.join(BASE_DIR, 'PMIStandard' , 'PDF_Generator', 'assets', 'ALAB_Logo.png')}",
                 "customer_name": customer_full_name,
-                "invoice_number": "Numbera",
+                "invoice_number": Numbera,
                 "invoice_date": header.get("Date","").strftime("%B %d, %Y"),
                 "invoice_time":invoice_time.strftime("%I:%M %p"),
-                "invoice_code": "RET123456789102",
-                "order_type": "return",
+                "invoice_code": data["orderNumber"],
+                "order_type": data["orderType"],
                 'method_of_payment': 'Credit Card',
                 'amount': '100.00',
                 'quantity': '5',
