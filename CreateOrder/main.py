@@ -82,7 +82,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
 
 
-        if status_code != 500 :
+        if status_code == 200:
             #cegid web service get by key
             logging.info("response_content")
             logging.info(response_content)
