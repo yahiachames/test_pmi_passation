@@ -28,7 +28,7 @@
 
         body {
             margin: 0;
-            padding: 20px;
+     
             color: black;
             font-family: 'Amiri', serif;
         }
@@ -38,45 +38,50 @@
             align-items: center;
             text-align: center;
             margin-bottom: 80px;
+           
+            
         }
         .logo_title {
             width: 200px;
             height: 200px;
-            margin-bottom: 20px;
+           
         }
-        h2.title_arabic {
+        .title_arabic {
             font-family: 'Amiri_Bold', serif;
             font-size: 16px;
-            margin: 5px 0;
+         
             text-align: center;
-            width: 500px;
+            width: 1000px;
+         
         }
-        h2.title_english {
+        .title_english {
             font-family: 'Amiri_Bold', sans-serif;
             font-size: 14px;
-            margin: 5px 0;
+        
             text-align: center;
-            width: 500px;
+            width: 1000px;
         }
-        h6.customer_care_title, h6.vat_registration_title {
+        .customer_care_title, .vat_registration_title {
             font-family: 'Amiri', sans-serif;
-            font-size: 10px;
+            font-size: 16px;
             font-weight: 500;
-            margin: 5px 0;
+     
             width: 500px;
         }
-        h2.tax_invoice_title {
-            font-family: 'Amiri', sans-serif;
+        .tax_invoice_title {
+            font-family: 'EnglishText', sans-serif;
             font-size: 18px;
-            margin: 5px 0;
+            font-weight: bolder;
             text-align: center;
             width: 500px;
+      
         }
         .details_container {
             display: flex;
             justify-content: space-between;
             margin-bottom: 40px;
             width: 100%;
+            height : 55%;
         }
         .customer, .invoice_details {
             display: flex;
@@ -130,6 +135,8 @@
             width: 100%;
             font-family: 'Amiri', serif;
             font-size: 10px;
+            margin: 0;
+            padding: 0;
         }
         th, td {
             border: 1px solid black;
@@ -138,6 +145,7 @@
         }
         .first-header th {
             border: none;
+            font-family: 'Amiri-Bold', Courier, monospace;
         }
         thead {
             display: table-header-group;
@@ -160,9 +168,10 @@
         }
         .voucher-code {
             margin-top: 20px;
-            margin-bottom: 20px;
+         
            font-family: 'Amiri', serif;
            font-size: 12px;
+       
         }
         .items-sold-details {
             display: flex;
@@ -170,6 +179,7 @@
             justify-content: center;
             width: 100%;
             font-size: 12px;
+          
         }
         .method-of-payment , .Amount , .Quantity {
             width: 30%;
@@ -186,19 +196,19 @@
   
         }
         .method-of-payment-label-en , .Amount-label-en  , .Quantity-label-en{
-            font-weight: bold;
-            font-family: 'EnglishText', sans-serif;
+            font-weight: 500;
+            font-family: 'EnglishTextLight', sans-serif;
         }
         .method-of-payment-label-ar , .Amount-label-ar  , .Quantity-label-ar{
-            font-weight: bold;
             font-family: 'Amiri', serif;
         }
         .tva-details{
+
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            margin-top: 20px;
+         
             font-size: 10px;
         }
         .total-original-amount, .total-dicsount , .total-after-discount,.total-amount-excl,.vat , .total-after-vat {
@@ -225,7 +235,7 @@
         }
         .total-original-amount-value, .total-dicsount-value , .total-after-discount-value,.total-amount-excl-value,.vat-value , .total-after-vat-value {
             font-family: 'EnglishText', sans-serif;
-            text-align: center;
+            text-align: right;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -244,19 +254,22 @@
             align-self: flex-end;
             align-content: flex-end;
     
-            width: 20%;
+            width: 30%;
            
         }
           /* Add styles for barcode */
           .barcode-container {
+            margin-top: 10px;
             text-align: center;
-            margin-top: 40px;
+            
             display: flex;
             flex-direction: column;
+            
+            
         }
         .barcode {
-            width: 150px;
-            height: 80px;
+            width: 120px;
+            height: 25px;
             
         }
         .invoice-code {
@@ -270,22 +283,28 @@
             text-align: center;
             margin-bottom: 15px;
         }
+        .tva-items-sold-details {
+            
+            height : 270px;
+      
+        }
+     
 
     </style>
 </head>
 <body>
     <div class="title_bloc">
         <img class="logo_title" src="{{ image_path }}">
-        <h2 class="title_arabic">راشيدين آر آر بي لتجارة التبغ ذ.م.م</h2>
-        <h2 class="title_english">RASHIDEEN R R P TOBACCO TRADING LLC</h2>
-        <h6 class="customer_care_title">Customer care N.800-8500017 العملاء خ</h6>
-        <h6 class="vat_registration_title">الرقم الضريبي 100304102500003 .:Registration V</h6>
+        <div class="title_arabic" style="width:1000px;font-size:x-large;">راشيدين آر آر بي لتجارة التبغ ذ.م.م</div>
+        <div class="title_english" style="width:1000px;font-size:x-large;">RASHIDEEN R R P TOBACCO TRADING LLC</div>
+        <div class="customer_care_title" style="width:1000px;">Customer care N.800-8500017 خدمة العملاء</div>
+        <div class="vat_registration_title" style="width:1000px;">الرقم الضريبي 100304102500003 .:Registration V</div>
         {% if order_type == "sales" %}
-        <h2 class="tax_invoice_title">TAX INVOICE</h2>
+        <div class="tax_invoice_title">TAX INVOICE</div>
         {% elif order_type == "return" %}
-        <h2 class="tax_invoice_title">TAX CREDIT NOTE</h2>
+        <div class="tax_invoice_title">TAX CREDIT NOTE</div>
         {% else %}
-        <h2 class="tax_invoice_title">WARRANTY PRODUCT REPLACEMENT NOTE</h2>
+        <div class="tax_invoice_title">WARRANTY PRODUCT REPLACEMENT NOTE</div>
         {% endif %}
     </div>
     <div class="details_container">
@@ -301,7 +320,7 @@
                     {% if order_type == "sales" %}
                     <span class="invoice_number_label_eng">Invoice No.</span>
                     {% elif order_type == "replacement" %}
-                    <span class="invoice_number_label_eng">  Transaction No.</span>
+                    <span class="invoice_number_label_eng">Transaction No.</span>
                     {% else %}
                     <span class="invoice_number_label_eng">Credit Note No.</span>
                     {% endif %}
@@ -360,71 +379,76 @@
         </tbody>
     </table>
     {% if order_type == "replacement" %}
-    <div class="customer-signature"  style="margin-top: 25px;">Customer Signature</div>
+    <div class="customer-signature" style="margin-top: 25px;">Customer Signature</div>
     {% else %}
-    <div class="voucher-code" >{{voucher_code}} voucher applied</div>
+   <div class="tva-items-sold-details">
+ 
+
     <div class="items-sold-details"> 
         <div class="method-of-payment">
             <div class="method-of-payment-label">
                 <div class="method-of-payment-label-en">Method of Payment</div>
                 <div class="method-of-payment-label-ar">طريقة الدفع</div>
             </div>
-            <div class="method-of-payment-value">Ecom Card Payment</div>
+            <div class="method-of-payment-value">{{ method_of_payment }}</div>
         </div>
         <div class="Amount">
             <div class="Amount-label">
                 <div class="Amount-label-en">Amount</div>
                 <div class="Amount-label-ar">المبلغ</div>
             </div>
-            <div class="Amount-value">-75.00</div>
+            <div class="Amount-value">{{ amount }}</div>
         </div>
         <div class="Quantity">
             <div class="Quantity-label">
                 <div class="Quantity-label-en">Qty of items sold</div>
                 <div class="Quantity-label-ar">مجموع الكميات</div>
             </div>
-            <div class="Quantity-value">-1</div>
+            <div class="Quantity-value">{{ quantity }}</div>
         </div>
     </div>
     <div class="tva-details">
         <div class="total-original-amount">
             <div class="total-original-amount-en">Total Original Amount AED</div>
-            <div class="total-original-amount-value">-75.00</div>
+            <div class="total-original-amount-value">{{ total_original_amount }}</div>
             <div class="total-original-amount-ar">المجموع الفعلي</div>
         </div>
         <div class="total-dicsount">
             <div class="total-dicsount-en">Total Discount AED</div>
-            <div class="total-dicsount-value">0.00</div>
+            <div class="total-dicsount-value">{{ total_discount }}</div>
             <div class="total-dicsount-ar">مجموع الخصم</div>
         </div>
         <div class="total-after-discount">
             <div class="total-after-discount-en">Total After Discount AED</div>
-            <div class="total-after-discount-value">-75.00</div>
+            <div class="total-after-discount-value">{{ total_after_discount }}</div>
             <div class="total-after-discount-ar">المجموع بعد الخصم</div>
         </div>
         <div class="total-amount-excl">
             <div class="total-amount-excl-en">Amount excl. VAT AED</div>
-            <div class="total-amount-excl-value">-71.43</div>
+            <div class="total-amount-excl-value">{{ amount_excl_vat }}</div>
             <div class="total-amount-excl-ar">المجموع الإجمالي قبل ضريبة القيمة المضافة</div>
         </div>
         <div class="vat">
             <div class="vat-en">VAT AED</div>
-            <div class="vat-value">-3.57</div>
+            <div class="vat-value">{{ vat_amount }}</div>
             <div class="vat-ar">مجموع ضريبة القيمة المضافة</div>
         </div>
         <div class="total-after-vat">
             <div class="total-after-vat-en">Total after VAT AED</div>
-            <div class="total-after-vat-value">-75.00</div>
+            <div class="total-after-vat-value">{{ total_after_vat }}</div>
             <div class="total-after-vat-ar">المجموع النهائي</div>
         </div>
     </div>
-        <!-- Barcode Section -->
-        <div class="barcode-container">
+           <!-- Barcode Section -->
+           <div class="barcode-container">
             <img  class="barcode" src="{{ barcode_path }}" alt="Barcode">
             <div class="invoice-code">{{ invoice_code }}</div>
         </div>
         <div class="this-is-computer" >This is a computer generated document and does not require a signature. Consideration charged includes prices of all items</div>
         <div class="terms-and-conditions">.Terms & Conditions apply</div>
-{% endif %}
+
+   </div>
+ 
+ {% endif %}
     </body>
 </html>

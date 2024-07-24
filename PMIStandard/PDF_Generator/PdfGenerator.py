@@ -1,6 +1,8 @@
 from jinja2 import Environment, FileSystemLoader
 from weasyprint import HTML
 import os
+import logging
+logging.getLogger('fontTools').setLevel(logging.WARNING)
 
 class PDFgenrator:
     """
