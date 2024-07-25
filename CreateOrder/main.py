@@ -31,6 +31,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         logging.info(data["orderDate"])
         if data['orderNumber'].startswith("RET"):
             data["orderType"] = "return"
+        data["orderType"] = data["orderType"].lower()
 
         logging.info("iq payload")
         logging.info(data)
@@ -523,7 +524,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             
     except Exception as e:
             # Handle the exception and send it as a message
-            error_message = f"An error occurred: {str(e)}"
+            error_message = f"internal error occurred: {str(e)}"
             return func.HttpResponse(
             json.dumps({"status": 500, "message": error_message}),
             status_code=500,

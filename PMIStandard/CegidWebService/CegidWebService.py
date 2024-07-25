@@ -96,7 +96,7 @@ class CegidWebService:
         Returns:
             dict: The response from the web service containing the created return document details.
         """
-
+        
         logging.info("iq payload from return") 
         logging.info(data)
         logging.info(data["items"])
@@ -132,7 +132,7 @@ class CegidWebService:
                     },
                     "WarehouseId": data.get("warehouseId", "IQWH01")
                 },
-                   "Lines": {  "Create_Line"  : self.create_lines(data["items"],0)},
+                "Lines": { "Create_Line": self.create_lines(data["items"], 0) },
                 "Payments": {
                     "Create_Payment": {
                         "Amount": data.get("totalAmount", ""),
@@ -154,24 +154,17 @@ class CegidWebService:
                 "DatabaseId": self.DatabaseId 
             }
         }
+
         try:
             logging.info("return payload")
             logging.info(request_data)
             response = self.client.service.Create(**request_data)
             logging.info(response)
-            logging.info(
-                "Request:\n%s"
-                , self.history.last_sent[
-                'envelope'
-            ])  
-                    
-            logging.info(
-                "Response:\n%s"
-                , self.history.last_received[
-                'envelope'
-            ])
-            return (200,"success",json.loads(json.dumps(helpers.serialize_object(response))))
-        except:
+            logging.info("Request:\n%s", self.history.last_sent['envelope'])  
+            logging.info("Response:\n%s", self.history.last_received['envelope'])
+            return (200, "success", json.loads(json.dumps(helpers.serialize_object(response))))
+        except Exception as e:
+            logging.error("Exception occurred", exc_info=True)
             error_message = etree.tostring(self.history.last_received["envelope"], encoding="unicode", pretty_print=True)
             root = ET.fromstring(error_message)
 
@@ -179,6 +172,7 @@ class CegidWebService:
             error_elements = root.findall(".//{http://www.cegid.fr/fault}Message")
 
             # Extract the desired error messages
+            error_messages = []
             for element in error_elements:
                 message = element.text.strip()
                 if "-" in message:
@@ -187,8 +181,15 @@ class CegidWebService:
                         if "-" in line:
                             error_message = line.strip().lstrip("- ")
                             error_message = error_message.split('- ')[1]
-            logging.info(error_message)   
-            return (500,error_message , None) 
+                            error_messages.append(error_message)
+            
+            if error_messages:
+                final_error_message = "\n".join(error_messages)
+            else:
+                final_error_message = "An unknown error occurred."
+
+            logging.info(final_error_message)   
+            return (500, final_error_message, None) 
     def create_sales_document(self, data):
         """
         Creates a sales document in the system.
@@ -390,7 +391,7 @@ class CegidWebService:
                             error_message = line.strip().lstrip("- ")
                             error_message = error_message.split('- ')[1]
             logging.info(error_message) 
-            return (200,"success",helpers.serialize_object(response))
+            return (500,error_message,None)
 
     def create_lines(self, list_of_item, shippingCost="0"):
         """

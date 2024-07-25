@@ -299,7 +299,7 @@
         <div class="title_english" style="width:1000px;font-size:x-large;">RASHIDEEN R R P TOBACCO TRADING LLC</div>
         <div class="customer_care_title" style="width:1000px;">Customer care N.800-8500017 خدمة العملاء</div>
         <div class="vat_registration_title" style="width:1000px;">الرقم الضريبي 100304102500003 .:Registration V</div>
-        {% if order_type == "sales" %}
+        {% if order_type == "sale" %}
         <div class="tax_invoice_title">TAX INVOICE</div>
         {% elif order_type == "return" %}
         <div class="tax_invoice_title">TAX CREDIT NOTE</div>
@@ -317,7 +317,7 @@
         <div class="invoice_details">
             <div class="invoice_number_container">
                 <div>
-                    {% if order_type == "sales" %}
+                    {% if order_type == "sale" %}
                     <span class="invoice_number_label_eng">Invoice No.</span>
                     {% elif order_type == "replacement" %}
                     <span class="invoice_number_label_eng">Transaction No.</span>
