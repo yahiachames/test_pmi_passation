@@ -14,6 +14,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from datetime import datetime,timedelta
 from decimal import Decimal
+import math
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
@@ -465,14 +466,16 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 "invoice_code": data["orderNumber"],
                 "order_type": data["orderType"],
                 'method_of_payment': 'Credit Card',
-                'amount': '100.00',
-                'quantity': '5',
+                'amount': '%.2f' % (round(float(data_dict['Header']['TaxIncludedTotalAmount']),3)),
+                'quantity':  str(math.trunc(float(data_dict['Header']['TotalQuantity']))),
                 'total_original_amount': Totale_orig,
                 'total_discount': total_discount,
                 'total_after_discount': total_after_discount,
                 'amount_excl_vat': Amount_excl,
                 'vat_amount': VAT,
                 'total_after_vat': total_after_vat,
+                "voucher_value" : "50.00",
+                "total_after_voucher_and_vat"  : "170.00"
             
             
             }
