@@ -27,267 +27,323 @@
         }
 
         body {
-            margin: 0;
-     
-            color: black;
-            font-family: 'Amiri', serif;
-        }
-        .title_bloc {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+    margin: 0;
+    color: black;
+    font-family: 'Amiri', serif;
+}
+.title_bloc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    margin-top: -50px;
+}
+.logo_title {
+    width: 180px;
+    height: 170px;
+}
+.title_arabic {
+    font-family: 'Amiri_Bold', serif;
+    font-size: large;
+    font-weight: 590;
+    text-align: center;
+    width: 1000px;
+}
+.title_english {
+    font-family: 'EnglishText', sans-serif;
+    font-size: large;
+    font-weight: 590;
+    text-align: center;
+    width: 1000px;
+    margin: 1px;
+}
+.customer_care_title, .vat_registration_title {
+    font-family: 'Amiri', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    margin: 1px;
+    width: 1000px;
+}
+.tax_invoice_title {
+    font-family: 'EnglishText', sans-serif;
+    font-size: 13px;
+    font-weight: bolder;
+    text-align: center;
+    width: 500px;
+    margin-top: 7px;
+}
+.details_container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    width: 100%;
+    height: 55%;
+}
+.customer, .invoice_details {
+    display: flex;
+    flex-direction: column;
+    width: 46%;
+}
+.customer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+.customer_label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.invoice_number_container, .invoice_date_container, .invoice_time_container {
+    width: 270px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.customer_name {
+    font-family: 'Amiri', serif;
+    font-size: 14px;
+    width: 200px;
+    height: 40px;
+    margin-bottom: 9px;
+    text-align: left;
+}
+.customer_label {
+    width: 60%;
+    height: 75%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+.customer_label_eng {
+    font-size: 14px;
+}
+.customer_label_eng, .customer_label_ar, .invoice_number_label_eng, .invoice_date_label_eng, .invoice_time_label_eng {
+    font-size: 13px;
+}
+.customer_label_ar {
+    width: 40%;
+}
+.invoice_number_value, .invoice_date_value, .invoice_time_value {
+    font-family: 'EnglishTextLight', sans-serif;
+    font-size: 13px;
+    text-align: left;
+    width: 500px;
+}
+.invoice_number_label_eng, .invoice_number_value {
+    font-weight: bold;
+}
+span {
+    width: 100%;
+    width: 500px;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: 'Amiri', serif;
+    font-size: 10px;
+    margin: 0;
+    padding: 0;
+}
+th, td {
+    border: 2px solid black;
+
+    text-align: center;
+}
+.second-header {
+    font-family: 'EnglishText', Courier, monospace;
+    font-size: 11px;
+}
+.first-header th {
+    border: none;
+    font-family: 'Amiri_Bold', Courier, monospace;
+    font-size: 11px;
+}
+thead {
+    display: table-header-group;
+}
+tbody {
+    display: table-row-group;
+}
+tr {
+    border: none;
+    page-break-inside: avoid;
+}
+.row td {
+    border: none;
+    font-size: 11px;
+    font-family: 'EnglishTextLight', Courier, monospace;
+}
+thead:nth-of-type(n) {
+    display: none;
+}
+thead:nth-of-type(1) {
+    display: table-row-group;
+}
+.spacer-row td {
+    height: 15px;
+    /* Adjust the height as needed */
+    border: none;
+    background-color: white;
+}
+.reference-label-ar, .reference-label-eng, .reference-value {
+    text-align: left;
+    width: 20%;
+    padding-left: 2px;
+}
+.description-label-ar, .description-label-eng, .description-value {
+    text-align: left;
+    width: 40%;
+    padding-left: 2px;
+}
+.qty-label-ar, .qty-label-eng, .qty-value {
+    width: 5px;
+}
+.qty-label-ar, .qty-label-eng {
+    text-align: right;
+}
+.qty-label-eng {
+    padding-right: 2px;
+}
+.unit-price-label-eng, .unit-price-label-ar {
+    text-align: right;
+    width: 5%;
+}
+.unit-price-label-ar {
+    width: 9%;
+}
+.unit-price-label-eng {
+    text-align: center;
+}
+.value-tax-exc-label-eng, .value-tax-exc-label-ar {
+    width: 12%;
+}
+.value-tax-label-eng, .value-tax-label-ar {
+    width: 10%;
+}
+.value-tax-label-total-ar, .value-tax-label-total-eng {
+    text-align: right;
+}
+.voucher-code {
+    margin-top: 20px;
+    font-family: 'Amiri', serif;
+    font-size: 12px;
+}
+.items-sold-details {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 95%;
+    font-size: 12px;
+}
+.method-of-payment-label, .Amount-label, .Quantity-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-between;
+    margin-bottom: 5px
+}
+.method-of-payment-label-en, .Amount-label-en, .Quantity-label-en {
+    font-weight: 600;
+    font-family: 'EnglishText', sans-serif;
+}
+.method-of-payment-label-ar, .Amount-label-ar, .Quantity-label-ar {
+    font-family: 'Amiri', serif;
+    font-size: 15px;
+}
+.method-of-payment {
+    width: 35%;
+    margin-right: 10px;
+}
+.method-of-payment-label-ar {
+    width: 40%;
+    text-align: right;
+}
+.method-of-payment-label-en {
+    width: 70%;
+    text-align: left;
+}
+.Quantity {
+    width: 40%;
+    margin-left: 20px;
+}
+.Amount {
+    width: 20%;
+}
+.tva-details {
+    margin-top: 30px;
+    margin-left: 90px;
+    width: 80%;
+
+}
+.total-original-amount, .total-dicsount, .total-after-discount, .total-amount-excl, .vat, .total-after-vat , .total-after-vat-and-voucher , .voucher-value{
+    display: flex;
+    font-size: 11px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    height: 30px;
+
+    justify-content: space-between;
+   
+    
+}
+.total-original-amount-en, .total-dicsount-en, .total-after-discount-en, .total-amount-excl-en, .vat-en, .total-after-vat-en , .total-after-vat-and-voucher-en , .voucher-value-en{
+    font-family: 'EnglishTextLight', sans-serif;
+    text-align: right;
+
+    width: 35%;
+    height: 100%;
+   
+
+  
+}
+.total-original-amount-value, .total-dicsount-value, .total-after-discount-value, .total-amount-excl-value, .vat-value, .total-after-vat-value , .total-after-vat-and-voucher-value , .voucher-value-value{
+    font-family: 'EnglishTextLight', sans-serif;
+    text-align: left;
+
+   
+    width: 10%;
+  
+}
+.total-original-amount-ar, .total-dicsount-ar, .total-after-discount-ar, .total-amount-excl-ar, .vat-ar, .total-after-vat-ar , .total-after-vat-and-voucher-ar , .voucher-value-ar {
+    font-family: 'Amiri_Bold', serif;
+    text-align: right;
+
+    width: 35%;
+
+}
+/* Add styles for barcode */
+.barcode-container {
+    margin-top: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+   
+}
+.barcode {
+    width: 120px;
+    height: 25px;
+}
+.invoice-code {
+    font-family: 'Amiri', serif;
+    font-size: 11px;
+  
+}
+
+.this-is-computer  , .customer-signature {
+            font-family: 'EnglishTextLight', sans-serif;
+            font-size: 10px;
             text-align: center;
-            margin-bottom: 80px;
-           
-            
-        }
-        .logo_title {
-            width: 200px;
-            height: 200px;
-           
-        }
-        .title_arabic {
-            font-family: 'Amiri_Bold', serif;
-            font-size: 16px;
-         
-            text-align: center;
-            width: 1000px;
-         
-        }
-        .title_english {
-            font-family: 'Amiri_Bold', sans-serif;
-            font-size: 14px;
-        
-            text-align: center;
-            width: 1000px;
-        }
-        .customer_care_title, .vat_registration_title {
-            font-family: 'Amiri', sans-serif;
-            font-size: 16px;
-            font-weight: 500;
-     
-            width: 500px;
-        }
-        .tax_invoice_title {
-            font-family: 'EnglishText', sans-serif;
-            font-size: 18px;
-            font-weight: bolder;
-            text-align: center;
-            width: 500px;
-      
-        }
-        .details_container {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 40px;
-            width: 100%;
-            height : 55%;
-        }
-        .customer, .invoice_details {
-            display: flex;
-            flex-direction: column;
-            width: 46%;
-        }
-        .customer {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: center;
-            align-items: center;
-        }
-        .customer_label, .invoice_number_container, .invoice_date_container, .invoice_time_container {
-            width: 270px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: 5px;
         }
-        .customer_name {
-            font-family: 'Amiri', serif;
-            font-size: 10px;
-            width: 70%;
-            height: 80%;
-            margin: 10px;
-            text-align: left;
-        }
-        .customer_label {
-            width: 30%;
-            height: 80%;
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-        }
-        .customer_label_ar {
-            width: 100%;
-        }
-        .invoice_number_value, .invoice_date_value, .invoice_time_value {
-            font-family: 'EnglishText', sans-serif;
-            font-size: 10px;
-            font-weight: bold;
-            text-align: left;
-            width: 500px;
-        }
-        span {
-            width: 100%;
-            width: 500px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            font-family: 'Amiri', serif;
-            font-size: 10px;
-            margin: 0;
-            padding: 0;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: center;
-        }
-        .first-header th {
-            border: none;
-            font-family: 'Amiri-Bold', Courier, monospace;
-        }
-        thead {
-            display: table-header-group;
-        }
-        tbody {
-            display: table-row-group;
-        }
-        tr {
-            border: none;
-            page-break-inside: avoid;
-        }
-        .row td {
-            border: none;
-        }
-        thead:nth-of-type(n) {
-            display: none;
-        }
-        thead:nth-of-type(1) {
-            display: table-row-group;
-        }
-        .voucher-code {
-            margin-top: 20px;
-         
-           font-family: 'Amiri', serif;
-           font-size: 12px;
-       
-        }
-        .items-sold-details {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            font-size: 12px;
-          
-        }
-        .method-of-payment , .Amount , .Quantity {
-            width: 30%;
-            margin : 5px;
-        
-        }
-        .method-of-payment-label , .Amount-label , .Quantity-label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            justify-content: space-between;
-            border: solid;
-            border-color: transparent;
-  
-        }
-        .method-of-payment-label-en , .Amount-label-en  , .Quantity-label-en{
-            font-weight: 500;
-            font-family: 'EnglishTextLight', sans-serif;
-        }
-        .method-of-payment-label-ar , .Amount-label-ar  , .Quantity-label-ar{
-            font-family: 'Amiri', serif;
-        }
-        .tva-details{
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-         
-            font-size: 10px;
-        }
-        .total-original-amount, .total-dicsount , .total-after-discount,.total-amount-excl,.vat , .total-after-vat {
-            display: flex;
-       
-            width: 650px;
-            justify-content: center;
-            align-items: center;
-            justify-content: space-between;
-            margin : 5px;
-            text-align: left;
-        }
-        .total-original-amount-en, .total-dicsount-en , .total-after-discount-en,.total-amount-excl-en,.vat-en , .total-after-vat-en {
-            font-family: 'EnglishText', sans-serif;
-            text-align: center;
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            align-self: flex-start;
-            align-content: flex-start;
-      
-            width: 40%;
-           
-        }
-        .total-original-amount-value, .total-dicsount-value , .total-after-discount-value,.total-amount-excl-value,.vat-value , .total-after-vat-value {
-            font-family: 'EnglishText', sans-serif;
-            text-align: right;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            align-self: center;
-            align-content: center;
-      
-            width: 20%;
-           
-        }
-        .total-original-amount-ar, .total-dicsount-ar , .total-after-discount-ar,.total-amount-excl-ar,.vat-ar , .total-after-vat-ar {
-            font-family: 'Amiri', serif;
-            text-align: center;
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-            align-self: flex-end;
-            align-content: flex-end;
-    
-            width: 30%;
-           
-        }
-          /* Add styles for barcode */
-          .barcode-container {
-            margin-top: 10px;
-            text-align: center;
-            
-            display: flex;
-            flex-direction: column;
-            
-            
-        }
-        .barcode {
-            width: 120px;
-            height: 25px;
-            
-        }
-        .invoice-code {
-            font-family: 'EnglishText', sans-serif;
-            font-size: 12px;
-            margin-bottom: 25px;
-        }
-        .this-is-computer , .terms-and-conditions , .customer-signature {
-            font-family: 'EnglishText', sans-serif;
-            font-size: 12px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .tva-items-sold-details {
-            
-            height : 270px;
-      
-        }
      
 
     </style>
@@ -295,8 +351,8 @@
 <body>
     <div class="title_bloc">
         <img class="logo_title" src="{{ image_path }}">
-        <div class="title_arabic" style="width:1000px;font-size:x-large;">راشيدين آر آر بي لتجارة التبغ ذ.م.م</div>
-        <div class="title_english" style="width:1000px;font-size:x-large;">RASHIDEEN R R P TOBACCO TRADING LLC</div>
+        <div class="title_arabic" >راشيدين آر آر بي لتجارة التبغ ذ.م.م</div>
+        <div class="title_english" >RASHIDEEN R R P TOBACCO TRADING LLC</div>
         <div class="customer_care_title" style="width:1000px;">Customer care N.800-8500017 خدمة العملاء</div>
         <div class="vat_registration_title" style="width:1000px;">الرقم الضريبي 100304102500003 .:Registration V</div>
         {% if order_type == "sale" %}
@@ -310,9 +366,13 @@
     <div class="details_container">
         <div class="customer">
             <div class="customer_label">
-                <div class="customer_label_ar" style="text-align:right;">العميل</div>
+              
+                <div class="customer_label_eng">Customer:</div>
+                <div class="customer_name">{{ customer_name }}</div>
             </div>
-            <div class="customer_name">Customer:  {{ customer_name }}</div>
+            <div class="customer_label_ar" style="text-align:right;">العميل</div>
+            
+          
         </div>
         <div class="invoice_details">
             <div class="invoice_number_container">
@@ -346,30 +406,75 @@
     </div>
     <table>
         <thead>
+            {% if order_type != "replacement" %}
             <tr class="first-header">
-                <th class="no-border">الرقم المرجعي</th>
-                <th class="no-border">الوصف</th>
-                <th class="no-border">الكمية</th>
-                <th class="no-border">سعر الوحدة</th>
-                <th class="no-border">بدون ضريبة سعر الوحدة</th>
-                <th class="no-border">نسبة ضريبة</th>
-                <th class="no-border">المبلغ الإجمالي</th>
+                <th class="no-border reference-label-ar">الرقم المرجعي</th>
+                <th class="no-border description-label-ar">الوصف</th>
+                <th class="no-border qty-label-ar">الكمية</th>
+                <th class="no-border unit-price-label-ar">سعر الوحدة</th>
+                <th class="no-border value-tax-exc-label-ar">سعر الوحدة بدون ضريبة</th>
+                <th class="no-border value-tax-label-ar">نسبة ضريبة</th>
+                <th class="no-border value-tax-label-total-ar">المبلغ الإجمالي</th>
             </tr>
             <tr class="second-header">
-                <th>Reference</th>
-                <th>Description</th>
-                <th>Qty</th>
-                <th>U.Price</th>
-                <th>Value (Tax Excl)</th>
-                <th>5% VAT</th>
-                <th>Total</th>
+                <th class="reference-label-eng">Reference</th>
+                <th class="description-label-eng">Description</th>
+                <th class="qty-label-eng">Qty</th>
+                <th class="unit-price-label-eng">U.Price</th>
+                <th class="value-tax-exc-label-eng">Value <br> (Tax Excl)</th>
+                <th class="value-tax-label-eng">5% VAT</th>
+                <th class="value-tax-label-total-eng">Total</th>
+            </tr>
+            
+            {% else %}
+            <tr class="first-header">
+                <th class="no-border reference-label-ar" style="width: 20%;">الرقم المرجعي</th>
+                <th class="no-border description-label-ar" style="width: 70%;">الوصف</th>
+                <th class="no-border qty-label-ar" style="width: 10%;text-align: left;">الكمية</th>
+              
+            </tr>
+            <tr class="second-header">
+                <th class="reference-label-eng" style="width: 20%;">Reference</th>
+                <th class="description-label-eng" style="width: 70%;">Description</th>
+                <th class="qty-label-eng" style="width: 10%;text-align: left;">Qty</th>
+               
+            </tr>
+            {% endif %}
+            <tr class="spacer-row">
+                <td colspan="7"></td>
             </tr>
         </thead>
-        <tbody>
+        <tbody style="margin-top: 30px;">
             {% for row in data %}
                 <tr class="row">
                     {% for cell in row %}
-                        <td>{{ cell }}</td>
+                    {% if order_type != "replacement" %}
+                        {% if loop.index == 1 %}
+                            <td class="reference-value">{{ cell }}</td>
+                        {% elif loop.index == 2 %}
+                            <td class="description-value">{{ cell }}</td>
+                        {% elif loop.index == 3 %}
+                            <td class="qty-value">{{ cell }}</td>
+                    
+                        {% elif loop.index == 4 %}
+                            <td class="unit-price-value">{{ cell }}</td>
+                        {% elif loop.index == 5 %}
+                            <td class="value-tax-exc-value">{{ cell }}</td>
+                        {% elif loop.index == 6 %}
+                            <td class="value-tax-value">{{ cell }}</td>
+                        {% elif loop.index == 7 %}
+                            <td class="value-tax-total-value">{{ cell }}</td>
+                        {% endif %}
+
+                    {% else %}
+                    {% if loop.index == 1 %}
+                    <td class="reference-value" style="width: 20%;">{{ cell }}</td>
+                {% elif loop.index == 2 %}
+                    <td class="description-value" style="width: 70%;">{{ cell }}</td>
+                {% elif loop.index == 3 %}
+                    <td class="qty-value" style="width: 10%;">{{ cell }}</td>
+                {% endif %}
+                    {% endif %}
                     {% endfor %}
                 </tr>
                 {% if loop.index % 10 == 0 %}
@@ -381,9 +486,6 @@
     {% if order_type == "replacement" %}
     <div class="customer-signature" style="margin-top: 25px;">Customer Signature</div>
     {% else %}
-   <div class="tva-items-sold-details">
- 
-
     <div class="items-sold-details"> 
         <div class="method-of-payment">
             <div class="method-of-payment-label">
@@ -407,11 +509,13 @@
             <div class="Quantity-value">{{ quantity }}</div>
         </div>
     </div>
-    <div class="tva-details">
-        <div class="total-original-amount">
-            <div class="total-original-amount-en">Total Original Amount AED</div>
-            <div class="total-original-amount-value">{{ total_original_amount }}</div>
-            <div class="total-original-amount-ar">المجموع الفعلي</div>
+    <div class="tva-details" >
+
+        {% if order_type == "return" %}
+        <div class="total-original-amount" >
+            <div class="total-original-amount-en" >Total Original Amount AED</div>
+            <div class="total-original-amount-value" >{{ total_original_amount }}</div>
+            <div class="total-original-amount-ar" >المجموع الفعلي</div>
         </div>
         <div class="total-dicsount">
             <div class="total-dicsount-en">Total Discount AED</div>
@@ -438,16 +542,46 @@
             <div class="total-after-vat-value">{{ total_after_vat }}</div>
             <div class="total-after-vat-ar">المجموع النهائي</div>
         </div>
+        {% else %}
+        <div class="total-amount-excl">
+            <div class="total-amount-excl-en">Total Amount excl. VAT AED</div>
+            <div class="total-amount-excl-value">{{ amount_excl_vat }}</div>
+            <div class="total-amount-excl-ar">المجموع الإجمالي قبل ضريبة القيمة المضافة</div>
+        </div>
+        <div class="vat">
+            <div class="vat-en">VAT AED</div>
+            <div class="vat-value">{{ vat_amount }}</div>
+            <div class="vat-ar">مجموع ضريبة القيمة المضافة</div>
+        </div>
+        <div class="total-after-vat">
+            <div class="total-after-vat-en">Total after VAT AED</div>
+            <div class="total-after-vat-value">{{ total_after_vat }}</div>
+            <div class="total-after-vat-ar">المجموع النهائي</div>
+        </div>
+        <div class="voucher-value">
+            <div class="voucher-value-en">Voucher AED</div>
+            <div class="voucher-value-value">{{ voucher_value }}</div>
+            <div class="voucher-value-ar">القسيمة</div>
+        </div>
+        <div class="total-after-vat-and-voucher">
+            <div class="total-after-vat-and-voucher-en">Total after VAT and voucher AED</div>
+            <div class="total-after-vat-and-voucher-value">{{ total_after_voucher_and_vat }}</div>
+            <div class="total-after-vat-and-voucher-ar">ﺍﻟﻤﺠﻤﻮﻉ ﺑﻌﺪ ﺿﺮﻳﺒﺔ ﺍﻟﻘﻴﻤﺔ ﺍﻟﻤﻀﺎﻓﺔ ﻭ ﺍﻟﻘﺴﻴمة</div>
+        </div>
+        {% endif %}
+
     </div>
            <!-- Barcode Section -->
            <div class="barcode-container">
             <img  class="barcode" src="{{ barcode_path }}" alt="Barcode">
             <div class="invoice-code">{{ invoice_code }}</div>
         </div>
-        <div class="this-is-computer" >This is a computer generated document and does not require a signature. Consideration charged includes prices of all items</div>
-        <div class="terms-and-conditions">.Terms & Conditions apply</div>
+        <div class="this-is-computer" >This is a computer generated document and does not require a signature. Consideration charged includes prices of all items
+            <br> .Terms & Conditions apply
+        </div>
 
-   </div>
+
+   
  
  {% endif %}
     </body>
