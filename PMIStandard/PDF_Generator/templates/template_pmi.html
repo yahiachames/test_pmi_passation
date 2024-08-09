@@ -122,9 +122,11 @@
 }
 .customer_label_eng {
     font-size: 14px;
+    font-family: 'EnglishTextLight', Courier, monospace;
 }
 .customer_label_eng, .customer_label_ar, .invoice_number_label_eng, .invoice_date_label_eng, .invoice_time_label_eng {
     font-size: 13px;
+    font-family: 'EnglishTextLight', Courier, monospace;
 }
 .customer_label_ar {
     width: 40%;
@@ -135,8 +137,12 @@
     text-align: left;
     width: 500px;
 }
-.invoice_number_label_eng, .invoice_number_value {
+ .invoice_number_value {
     font-weight: bold;
+    font-family: 'EnglishTextLight', sans-serif;
+}
+.invoice_number_label_eng {
+    font-family: 'EnglishText', sans-serif;
 }
 span {
     width: 100%;
@@ -156,7 +162,7 @@ th, td {
     text-align: center;
 }
 .second-header {
-    font-family: 'EnglishText', Courier, monospace;
+    font-family: 'Amiri_Bold', Courier, monospace;
     font-size: 11px;
 }
 .first-header th {
@@ -237,11 +243,36 @@ thead:nth-of-type(1) {
 .items-sold-details {
     margin-top: 40px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     width: 95%;
     font-size: 12px;
 }
+
+.method-of-payment {
+    width: 35%;
+    margin-right: 10px;
+    font-family: 'Amiri', serif;
+}
+.method-of-payment-label-ar {
+    width: 40%;
+    text-align: right;
+    
+}
+.method-of-payment-label-en {
+    width: 70%;
+    text-align: left;
+}
+.Quantity {
+    width: 40%;
+    margin-left: 20px;
+    font-family: 'Amiri', serif;
+}
+.Amount {
+    width: 20%;
+    font-family: 'Amiri', serif;
+}
+
 .method-of-payment-label, .Amount-label, .Quantity-label {
     display: flex;
     align-items: center;
@@ -257,29 +288,11 @@ thead:nth-of-type(1) {
     font-family: 'Amiri', serif;
     font-size: 15px;
 }
-.method-of-payment {
-    width: 35%;
-    margin-right: 10px;
-}
-.method-of-payment-label-ar {
-    width: 40%;
-    text-align: right;
-}
-.method-of-payment-label-en {
-    width: 70%;
-    text-align: left;
-}
-.Quantity {
-    width: 40%;
-    margin-left: 20px;
-}
-.Amount {
-    width: 20%;
-}
 .tva-details {
     margin-top: 30px;
     margin-left: 90px;
     width: 80%;
+    page-break-inside: avoid;
 
 }
 .total-original-amount, .total-dicsount, .total-after-discount, .total-amount-excl, .vat, .total-after-vat , .total-after-vat-and-voucher , .voucher-value{
@@ -483,6 +496,11 @@ thead:nth-of-type(1) {
             {% endfor %}
         </tbody>
     </table>
+    {% if voucher_value != "0" %}
+    <div>
+        AED{{voucher_value}} voucher applied
+    </div>
+    {% endif %}
     {% if order_type == "replacement" %}
     <div class="customer-signature" style="margin-top: 25px;">Customer Signature</div>
     {% else %}
@@ -492,14 +510,24 @@ thead:nth-of-type(1) {
                 <div class="method-of-payment-label-en">Method of Payment</div>
                 <div class="method-of-payment-label-ar">طريقة الدفع</div>
             </div>
-            <div class="method-of-payment-value">{{ method_of_payment }}</div>
+            <div class="method-of-payment-value">
+                {% for row in method_of_payment %}
+                <div>
+                    {{row}}
+                </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="Amount">
             <div class="Amount-label">
                 <div class="Amount-label-en">Amount</div>
                 <div class="Amount-label-ar">المبلغ</div>
             </div>
-            <div class="Amount-value">{{ amount }}</div>
+            <div class="Amount-value"> {% for row in amount %}
+                <div>
+                    {{row}}
+                </div>
+                {% endfor %}</div>
         </div>
         <div class="Quantity">
             <div class="Quantity-label">
@@ -519,7 +547,7 @@ thead:nth-of-type(1) {
         </div>
         <div class="total-dicsount">
             <div class="total-dicsount-en">Total Discount AED</div>
-            <div class="total-dicsount-value">{{ total_discount }}</div>
+            <div class="total-dicsount-value">{{ total_discount_before_vat }}</div>
             <div class="total-dicsount-ar">مجموع الخصم</div>
         </div>
         <div class="total-after-discount">

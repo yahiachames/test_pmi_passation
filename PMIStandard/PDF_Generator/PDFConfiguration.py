@@ -20,7 +20,7 @@ class PDFConfiguration:
 
     def generate_and_modify_barcode(self, barcode_code: str, barcode_path: str) -> io.BytesIO:
         barcode_buffer = io.BytesIO()
-        ean = barcode.get('ean13', barcode_code, writer=ImageWriter())
+        ean = barcode.get('code128', barcode_code, writer=ImageWriter())
         ean.write(barcode_buffer, {"module_width": 0.8, "module_height": 15, "font_size": 16, "text_distance": 8.5, "quiet_zone": 1})
         barcode_buffer.seek(0)
         barcode_image = Image.open(barcode_buffer)
