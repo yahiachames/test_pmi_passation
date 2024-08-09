@@ -72,21 +72,22 @@ class CegidWebService:
         Returns:
             dict: The response from the web service containing the created document details.
         """
-        
+        logging.info("salemou alykom order type nivau ali")
+        logging.info(document_type)
         document_type = document_type.lower()  # Convert to lowercase
         if document_type == 'return':
-            return self.create_return_document(data)
+            return self.create_return_document(data,document_type)
             
         elif document_type == 'sale':
-            return self.create_sales_document(data)
+            return self.create_sales_document(data,document_type)
           
         elif document_type == 'replacement':
-            return self.create_replacement_document(data)
+            return self.create_replacement_document(data,document_type)
            
         else:
             raise ValueError("Invalid document type. Expected 'return', 'sales', or 'replacement'.")
 
-    def create_return_document(self, data):
+    def create_return_document(self, data, document_type):
         """
         Creates a return document in the system.
 
@@ -132,17 +133,9 @@ class CegidWebService:
                     },
                     "WarehouseId": data.get("warehouseId", "IQWH01")
                 },
-                "Lines": { "Create_Line": self.create_lines(data["items"], 0) },
+                "Lines": { "Create_Line": self.create_lines(data["items"], "0") },
                 "Payments": {
-                    "Create_Payment": {
-                        "Amount": data.get("totalAmount", ""),
-                        "CurrencyId": "AED",
-                        "DueDate": data.get("orderDate", ""),
-                        "Id": 1,
-                        "IsReceivedPayment": 0,
-                        "MethodId": "EMC"
-                    }
-                },
+                    "Create_Payment": self.create_payments(data,document_type)},
                 "ShippingTaxes": {
                     "Create_ShippingTax": {
                         "Amount": 0,
@@ -190,7 +183,7 @@ class CegidWebService:
 
             logging.info(final_error_message)   
             return (500, final_error_message, None) 
-    def create_sales_document(self, data):
+    def create_sales_document(self, data,document_type):
         """
         Creates a sales document in the system.
 
@@ -201,6 +194,7 @@ class CegidWebService:
             dict: The response from the web service containing the created sales document details.
         """
         logging.info("iq payload from sales") 
+        logging.info(document_type)
         logging.info(data)
         logging.info(data["items"])
         request_data = {
@@ -234,16 +228,10 @@ class CegidWebService:
                     },
                     "WarehouseId": data.get("warehouseId", "IQWH01")
                 },
-                "Lines": {  "Create_Line"  : self.create_lines(data["items"],data["shippingCost"])},
+                "Lines": {  "Create_Line"  : self.create_lines(data["items"],data["shippingCost"] if "shippingCost" in data else "0" )},
                 "Payments": {
-                    "Create_Payment": {
-                        "Amount": data.get("totalAmount", ""),
-                        "CurrencyId": "AED",
-                        "DueDate": data.get("orderDate", ""),
-                        "Id": 1,
-                        "IsReceivedPayment": 0,
-                        "MethodId": "EMC"
-                    }
+                    "Create_Payment": self.create_payments(data,document_type)
+                    
                 },
                 "ShippingTaxes": {
                     "Create_ShippingTax": {
@@ -291,8 +279,46 @@ class CegidWebService:
                             error_message = error_message.split('- ')[1]
             logging.info(error_message) 
             return (500,error_message , None)  
+    def create_payments(self , data , orderType):
+ 
+            items = data["items"]
+            payments = []
+            total_discount = 0
+            payments.append({
+                        "Amount": data.get("totalAmount", ""),
+                        "CurrencyId": "AED",
+                        "DueDate": data.get("orderDate", ""),
+                        "Id": 1,
+                        "IsReceivedPayment": 0,
+                        "MethodId": data.get("paymentType", "")
+                    })
+            logging.info("salemou alykom orderType create_payments")
+            logging.info(orderType)
+            if orderType == "sale"  : 
+                for item in items:
+                    originalPrice = float(item["originalPrice"])
+                    finalPrice = float(item["finalPrice"])
+  
+                    if ((originalPrice - finalPrice != 0) and item["promotionId"] != "" ) :
+                        difference =  (originalPrice - finalPrice ) * float(item["quantity"])
+                        total_discount += difference
+                        logging.info("checking calc")
+                        logging.info(f"{difference} , {total_discount},{data['promotionId']}")
+                
+                payments.append({  "Amount": total_discount,
+                                "CurrencyId": "AED",
+                                "DueDate": data.get("orderDate", ""),
+                                "Id": 1,
+                                "IsReceivedPayment": 0,
+                                "MethodId": "10"
+                            })
+            return payments
+        
 
-    def create_replacement_document(self, data):
+
+
+
+    def create_replacement_document(self, data , document_type):
         """
         Creates a replacement document in the system.
 
@@ -336,14 +362,7 @@ class CegidWebService:
                 },
                 "Lines": {  "Create_Line"  : self.create_lines(data["items"],"0")},
                 "Payments": {
-                    "Create_Payment": {
-                        "Amount": data.get("totalAmount", ""),
-                        "CurrencyId": "AED",
-                        "DueDate": data.get("orderDate", ""),
-                        "Id": 1,
-                        "IsReceivedPayment": 0,
-                        "MethodId": "EMC"
-                    }
+                    "Create_Payment": self.create_payments(data,document_type)
                 },
                 "ShippingTaxes": {
                     "Create_ShippingTax": {
@@ -408,6 +427,7 @@ class CegidWebService:
         for item in list_of_item:
             lines.append(
                {
+                   "ExternalReference" : float(item.get("originalPrice", "")) - float(item.get("finalPrice", "")),
                     "ItemIdentifier": {
                         "Reference": item.get("sku", "")
                     },
@@ -419,18 +439,18 @@ class CegidWebService:
                     "CatalogReference": item.get("promotionId", "")
                 }
             )
-        if shippingCost != "0" :
-            lines.append({
-                    "ItemIdentifier": {
-                        "Reference": "2222222222222"
-                    },
-                    "NetUnitPrice": shippingCost,
-                    "Origin": "ECommerce",
-                    "Quantity": "1",
-                    "SerialNumberId": "",
-                    "UnitPrice": shippingCost,
-                    "CatalogReference": ""
-                })
+        # if shippingCost != "0" and  shippingCost != "":
+        #     lines.append({
+        #             "ItemIdentifier": {
+        #                 "Reference": "2222222222222"
+        #             },
+        #             "NetUnitPrice": shippingCost,
+        #             "Origin": "ECommerce",
+        #             "Quantity": "1",
+        #             "SerialNumberId": "",
+        #             "UnitPrice": shippingCost,
+        #             "CatalogReference": ""
+        #         })
 
         return lines
     

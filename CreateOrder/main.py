@@ -28,7 +28,12 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         data = req.get_json()
 
         #Transformation
-        data["orderDate"] = data["orderDate"][-4:] + '-' + data["orderDate"][3:5] + '-' + data["orderDate"][0:2]
+        order_date_str = data["orderDate"]
+        parsed_date = datetime.strptime(order_date_str, '%Y-%m-%d')
+        data["orderDate"] = parsed_date.strftime('%d-%m-%Y')
+        logging.info(data["orderDate"])
+
+        data["orderDate"] = data["orderDate"][-4:] + '-' + data["orderDate"][3:5] + '-' + data["orderDate"][0:2] 
         logging.info(data["orderDate"])
         if data['orderNumber'].startswith("RET"):
             data["orderType"] = "return"
@@ -326,8 +331,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             first_name = delivery_address.get('FirstName', " ")
             customer_full_name = f"{first_name} {last_name}".strip()
             invoice_time = datetime.now() + timedelta(hours=3)
-
-            def process_data(data):
+            payments_amounts = []
+            payments_labels = []
+            def process_data(data,data_iq = {}):
+                # Initialize lists and variables
                 formatted_lines = []
                 Totale_orig = 0
                 total_discount = 0 
@@ -336,72 +343,150 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 total_tva = 0
                 total_after_tva = 0
 
-                Amount_excl = data["Header"]["TaxExcludedTotalAmount"]
-                VAT = data["Header"]["TaxIncludedTotalAmount"] - data["Header"]["TaxExcludedTotalAmount"]
-                total_after_vat = data["Header"]['TaxIncludedTotalAmount']
+                # Extract header values
+                Amount_excl = 0
+                VAT_after_discount = 0
+                VAT_before_discount = 0
+                total_after_vat = 0
+                total_discount = []
+                tva_before_discount = 0
 
+                # Initialize voucher amounts
+                voucher_amount = 0
+                paid_amount_str = "0"
+                voucher_amount_str = "0"
+                total_after_voucher_and_vat = 0
+                total_discount_before_vat = 0
+
+
+                # Process each line item
                 for item in data['Lines']['Get_Line']:
                     try:
+                        # Extract item details
                         reference = item['ItemReference']
                         description = item['Label']
-                        
-                        tax_included_price = round(float(item['TaxIncludedNetUnitPrice']), 3)
-                        tax_excluded_price = round(float(item['TaxExcludedUnitPrice']), 3)
-                        value_hors_tva = round(float(item['TaxExcludedNetUnitPrice']), 3)
+                        tax_included_price = round(float(item['TaxIncludedUnitPrice']), 3)
+                        tax_unit_Included_price = round(float(item['TaxIncludedUnitPrice']), 3)
+                        tax_included_net_unit_ptice = round(float(item['TaxIncludedNetUnitPrice']), 3)
+                        tax_excluded_net_unit_ptice = round(float(item['TaxExcludedNetUnitPrice']), 3)
+                        value_hors_tva = round(float(item['TaxExcludedUnitPrice']), 3)
                         quantity = int(float(item['Quantity']))
+
+
+                        Totale_orig += tax_excluded_net_unit_ptice * quantity
                         total_after_discount += value_hors_tva * quantity
-                        tva = tax_excluded_price - value_hors_tva
+                        tva_after_discount = (tax_included_price - value_hors_tva) * quantity
 
-                        orig_price = f'{tax_excluded_price:.2f}'
+                        # Format values for display
+                        orig_price = f'{tax_unit_Included_price:.2f}'
                         value_hors_tva_str = f'{value_hors_tva:.2f}'
-                        tva_str = f'{tva:.2f}'
-
-                        total = round(tax_excluded_price * quantity, 3)
+                        tva_before_discount += (tax_included_net_unit_ptice - tax_excluded_net_unit_ptice ) * quantity
+                        tva_str = f'{tva_after_discount:.2f}'
+                        total = round(tax_unit_Included_price * quantity, 3)
                         total_str = f'{total:.2f}'
-                        Totale_orig += value_hors_tva
+                        Amount_excl += item["TaxExcludedUnitPrice"] * quantity
+                        VAT_after_discount += tva_after_discount
+                        VAT_before_discount += tva_before_discount
+                        total_after_vat += tax_included_price * quantity
+                        total_after_voucher_and_vat += tax_unit_Included_price * quantity
 
-                        # Totale_orig.append(total_str)
+                        voucher_number = ""
+                        logging.info("salemou alykom peace")
+                        logging.info([reference, description, quantity, "-" + orig_price, "-" + value_hors_tva_str, "-" + tva_str, total_str])
+                        logging.info(data_iq)
+                        # Append formatted line
+                        if data_iq["orderType"] == "return":
+                            formatted_lines.append([reference, description, quantity, "-" + orig_price, "-" + value_hors_tva_str, "-" + tva_str, total_str])
+                            logging.info("its a return")
+                        else:
+                            formatted_lines.append([reference, description, quantity, orig_price, value_hors_tva_str, tva_str, total_str])
+                            logging.info("itnot a return")
+                        
 
-                        first_line = [reference, description, quantity, orig_price, value_hors_tva_str, tva_str, total_str]
-                        formatted_lines.append(first_line)
-
+                        # Handle complementary description (Arabic text)
                         if 'ComplementaryDescription' in item and item['ComplementaryDescription']:
                             arabic_text = item['ComplementaryDescription']
                             formatted_lines.append(['', f'{arabic_text} arabic', '', '', '', '', ''])
 
+                        # Handle serial number
                         if 'SerialNumberId' in item and item['SerialNumberId']:
-                            item['CatalogReference'] = "AED50"
                             serial_number = item['SerialNumberId']
                             formatted_lines.append(['', serial_number, '', '', '', '', ''])
 
-                        if 'CatalogReference' in item and item['CatalogReference']:
-                            voucher_number = item['CatalogReference']
-                            formatted_lines.append(['', f'{voucher_number} voucher applied', '', '', '', '', ''])
+                        # Handle catalog reference (voucher)
+                        if 'CatalogReference' in item and item['CatalogReference'] and data_iq["orderType"] == "sale":
+                            voucher_number = item['ExternalReference']
+                           
+                            if voucher_number is not  None:
+                                formatted_lines.append(['', f'{voucher_number} voucher applied', '', '', '', '', ''])
 
+                        # Handle discount
                         if item['TaxIncludedNetUnitPrice'] != item['TaxIncludedUnitPrice']:
-                            discount_amount = float(item['TaxIncludedUnitPrice']) - tax_included_price
+                            discount_amount = abs(float(item['TaxIncludedUnitPrice'])) - abs(float(item['TaxIncludedNetUnitPrice']))
+                            logging.info(float(item['TaxIncludedUnitPrice']))
+                            logging.info(float(item['TaxIncludedNetUnitPrice']))
                             discount_perc = round((discount_amount / float(item['TaxIncludedUnitPrice'])) * 100, 1)
                             discount_total = round(discount_amount * quantity, 3)
-                            total_discount += item['TaxIncludedUnitPrice'] * quantity
+                            total_discount.append(discount_total)
+                            total_discount_before_vat += round((abs(float(item['TaxExcludedUnitPrice'])) - abs(float(item['TaxExcludedNetUnitPrice'])) ) * quantity,3)
+                            logging.info("disocunt total salemou alykom")
+                            logging.info(total_discount)
                             formatted_lines.append(['', f'DISCOUNT on {discount_perc}% -{discount_amount:.3f}', '', '', '', '', ''])
                             formatted_lines.append(['', f'Orig. Amount: {float(item["TaxIncludedUnitPrice"]):.3f}', '', '', '', '', ''])
+
                     except (KeyError, ValueError) as e:
                         logging.info(f"Error processing item: {item}, error: {e}")
 
+                # Process each payment item
+                for item in data['Payments']['Get_Payment']:
+                    try:
+                        # Extract relevant information
+                        if 'Code' in item and item['Code'] == '10':
+                            voucher_amount = round(float(item['Amount']), 3)
+                            voucher_amount_str = f'{voucher_amount:.2f}'
+                            payments_amounts.append(voucher_amount_str)
+                            payments_labels.append("Voucher")
+                            total_after_voucher_and_vat -= voucher_amount
+                            
+                        if 'Code' in item and item['Code'] != '10':
+                            
+                            paid_amount = total_after_voucher_and_vat
+                            paid_amount_str = f'{paid_amount:.2f}'
+                            payments_amounts.append(paid_amount_str)
+                            payments_labels.append("Ecom card payments")                           
+
+                    except (KeyError, ValueError) as e:
+                        logging.info(f"Error processing item: {item}, error: {e}")
+
+                # Adjust total after voucher
+                # total_after_voucher = total_after_vat - voucher_amount
+                logging.info("salempou alykom")
+                logging.info(paid_amount_str)
+
+                # Handle shipping cost renaming
                 if formatted_lines and 'shipping cost' in formatted_lines[-1]:
                     formatted_lines[-1][formatted_lines[-1].index('shipping cost')] = 'Shipment fees'
+
+                # Format totals for display
                 Totale_orig = f'{Totale_orig:.2f}'
-                total_discount = f'{total_discount:.2f}'
+                total_discount = f'{sum(map(float,total_discount)):.2f}'
                 total_after_discount = f'{total_after_discount:.2f}'
                 total_before_tva = f'{total_before_tva:.2f}'
                 total_tva = f'{total_tva:.2f}'
                 total_after_vat = f'{total_after_vat:.2f}'
-                VAT = f'{VAT:.2f}'
+                VAT = f'{VAT_after_discount:.2f}'
                 Amount_excl = f'{Amount_excl:.2f}'
-                return formatted_lines , Totale_orig , total_discount , total_after_discount , total_before_tva , total_tva , total_after_tva , Amount_excl , VAT , total_after_vat 
+                total_after_voucher_and_vat = f'{total_after_voucher_and_vat:.2f}'
+ 
 
-            formatted_lines , Totale_orig , total_discount , total_after_discount , total_before_tva , total_tva , total_after_tva , Amount_excl , VAT , total_after_vat  = process_data(data_dict)
+                return formatted_lines, Totale_orig, total_discount, total_after_discount, total_before_tva, total_tva, total_after_vat, Amount_excl, VAT, voucher_amount_str, paid_amount_str , voucher_number , total_after_voucher_and_vat ,total_discount_before_vat
+
+            # Example usage
+            formatted_lines, Totale_orig, total_discount, total_after_discount, total_before_tva, total_tva, total_after_vat, Amount_excl, VAT, voucher_amount_str, total_after_voucher_str , voucher_number , total_after_voucher_and_vat , total_discount_before_vat = process_data(data_dict,data)
             logging.info(formatted_lines)
+
+
+
 
     
 
@@ -413,7 +498,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 barcode_code: str,
                 barcode_output_dir: str,
                 sample_data: list,
-                data: dict
+                data: dict,
+              
             ) -> bytes:
             
 
@@ -447,7 +533,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             FONT_PATH = os.path.join(BASE_DIR, "PMIStandard","PDF_Generator", 'fonts')
             TEMPLATE_FILE = "template_pmi.html"
             OUTPUT_FILE = "output_jinja_new_font.pdf"
-            BARCODE_CODE = "123456781234"
+            BARCODE_CODE = data_dict['Header']['InternalReference']
             BARCODE_OUTPUT_DIR = '/tmp'
             SAMPLE_DATA = [
                 ['7622100690917', 'IQOS ORIGINALS ONE MOBILITY KIT - SLATE', 1, '9.600', '12', '12', '9.600'],
@@ -458,26 +544,26 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             ]
             DATA = {
                 "data": formatted_lines,
-                "image_path": f"file://{os.path.join(BASE_DIR, 'PMIStandard' , 'PDF_Generator', 'assets', 'ALAB_Logo.png')}",
+                "image_path": f"file://{os.path.join(BASE_DIR, 'PMIStandard', 'PDF_Generator', 'assets', 'ALAB_Logo.png')}",
                 "customer_name": customer_full_name,
                 "invoice_number": Numbera,
                 "invoice_date": header.get("Date","").strftime("%B %d, %Y"),
-                "invoice_time":invoice_time.strftime("%I:%M %p"),
+                "invoice_time": invoice_time.strftime("%I:%M %p"),
                 "invoice_code": data["orderNumber"],
                 "order_type": data["orderType"],
-                'method_of_payment': 'Credit Card',
-                'amount': '%.2f' % (round(float(data_dict['Header']['TaxIncludedTotalAmount']),3)),
-                'quantity':  str(math.trunc(float(data_dict['Header']['TotalQuantity']))),
+                'method_of_payment': payments_labels,
+                'amount': payments_amounts,
+                'quantity': str(math.trunc(float(data_dict['Header']['TotalQuantity']))),
                 'total_original_amount': Totale_orig,
                 'total_discount': total_discount,
                 'total_after_discount': total_after_discount,
-                'amount_excl_vat': Amount_excl,
+                'total_discount_before_vat' : total_discount_before_vat,
+                 'amount_excl_vat': Amount_excl,
                 'vat_amount': VAT,
                 'total_after_vat': total_after_vat,
-                "voucher_value" : "50.00",
-                "total_after_voucher_and_vat"  : "170.00"
-            
-            
+                "voucher_value": voucher_amount_str,
+                "voucher_number": voucher_number,
+                "total_after_voucher_and_vat": total_after_voucher_and_vat
             }
 
 
@@ -519,8 +605,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         )
         else:
             return func.HttpResponse(
-            json.dumps({"status": status_code, "message": response_msg}),
-            status_code=500,
+            json.dumps({"status": 422, "message": response_msg}),
+            status_code=422,
             mimetype="application/json"
         )
 
